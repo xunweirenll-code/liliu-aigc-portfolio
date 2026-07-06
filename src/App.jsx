@@ -13,6 +13,7 @@ import Contact from "./pages/Contact.jsx";
 import { i18n } from "./data/i18n.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
+const BUILD_VERSION = "20260706-cache-bust-1";
 
 export default function App() {
   const [language, setLanguage] = useState("zh");
@@ -95,7 +96,7 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <div className="site-shell">
+    <div className="site-shell" data-build-version={BUILD_VERSION}>
       <Header language={language} setLanguage={setLanguage} copy={copy} activeSection={activeSection} />
       <main>
         <Routes>
