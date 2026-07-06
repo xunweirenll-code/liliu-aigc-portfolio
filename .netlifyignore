@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+.vite
+.agents
+*.log
+.codex-*.log
