@@ -1,4 +1,4 @@
-const imageRange = (folder, prefix, count, ext = "png") =>
+const imageRange = (folder, prefix, count, ext = "webp") =>
   Array.from({ length: count }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
     return `/assets/images/${folder}/${prefix}-${number}.${ext}`;
