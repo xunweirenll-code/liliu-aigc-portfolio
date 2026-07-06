@@ -1,5 +1,5 @@
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from "ogl";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import "./CircularGallery.css";
 
@@ -283,10 +283,13 @@ class Media {
     if (viewport) this.viewport = viewport;
 
     this.scale = this.screen.height / 1500;
-    this.plane.scale.y = (this.viewport.height * (900 * this.scale)) / this.screen.height;
-    this.plane.scale.x = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+    const isMobile = this.screen.width <= 760;
+    const widthFactor = isMobile ? 540 : 700;
+    const heightFactor = isMobile ? 720 : 900;
+    this.plane.scale.y = (this.viewport.height * (heightFactor * this.scale)) / this.screen.height;
+    this.plane.scale.x = (this.viewport.width * (widthFactor * this.scale)) / this.screen.width;
     this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
-    this.padding = 1.6;
+    this.padding = isMobile ? 0.55 : 1.6;
     this.width = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x = this.width * this.index;
@@ -370,6 +373,17 @@ class GalleryApp {
         labelScale,
       });
     });
+    this.centerInitialMedia();
+  }
+
+  centerInitialMedia() {
+    if (!this.medias?.[0]) return;
+    if (this.hasCenteredInitialMedia) return;
+    const initialOffset = this.medias[0].width;
+    this.scroll.current = initialOffset;
+    this.scroll.target = initialOffset;
+    this.scroll.last = initialOffset;
+    this.hasCenteredInitialMedia = true;
   }
 
   onTouchDown(e) {

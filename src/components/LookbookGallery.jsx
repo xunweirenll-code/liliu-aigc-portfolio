@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import LoadingImage from "./LoadingImage.jsx";
 
 const languageText = {
   zh: {
@@ -85,7 +86,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
                 onClick={() => openGroup(groupIndex, selectedImageIndex)}
               >
                 <figure>
-                  <img className="lookbook-cover-image" src={selectedImage.src} alt={selectedImage.alt} loading="lazy" />
+                  <LoadingImage className="lookbook-cover-image" src={selectedImage.src} alt={selectedImage.alt} loading={groupIndex < 2 ? "eager" : "lazy"} fetchPriority={groupIndex < 2 ? "high" : "auto"} />
                   <span aria-hidden="true">{copy.viewLook}</span>
                 </figure>
               </button>

@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function VideoCard({ video }) {
   return (
     <article className="video-card reveal">

@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function ProcessStep({ number, title, text }) {
   return (
     <article className="process-step reveal">

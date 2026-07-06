@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { previewImages } from "../data/previewImages.js";
 import "./PreviewImageFlow.css";
 
@@ -15,29 +15,46 @@ const wrap = (value, min, max) => {
 
 const getImageLimit = () => {
   if (typeof window === "undefined") return previewImages.length;
-  if (window.innerWidth < 768) return 30;
+  if (window.innerWidth < 768) return 20;
   if (window.innerWidth <= 1080) return 34;
   return previewImages.length;
 };
 
-const mobileLanes = [-34, -21, -8, 7, 20, 32];
-const mobileWidths = [74, 82, 90, 78, 96, 86, 70, 92, 80, 88];
-const mobileRotations = [-2.2, 1.6, -0.8, 2, -1.5, 0.9, 1.8, -1.2];
+const mobileSlots = [
+  { x: -32, y: 28, width: 82, rotation: -2.1 },
+  { x: 4, y: 92, width: 88, rotation: 1.5 },
+  { x: 31, y: 48, width: 78, rotation: -1.1 },
+  { x: -18, y: 280, width: 92, rotation: 2 },
+  { x: 28, y: 350, width: 84, rotation: -1.5 },
+  { x: 6, y: 560, width: 88, rotation: 1.1 },
+  { x: -31, y: 720, width: 80, rotation: -1.8 },
+  { x: 24, y: 770, width: 94, rotation: 1.8 },
+  { x: -4, y: 950, width: 86, rotation: -0.9 },
+  { x: 32, y: 1030, width: 80, rotation: 1.6 },
+  { x: -27, y: 1090, width: 90, rotation: -2 },
+  { x: -32, y: 1300, width: 82, rotation: 1.4 },
+  { x: 1, y: 1420, width: 88, rotation: -1.2 },
+  { x: 30, y: 1600, width: 84, rotation: 1.9 },
+  { x: -22, y: 1670, width: 92, rotation: -1.4 },
+  { x: 10, y: 1745, width: 80, rotation: 0.8 },
+  { x: 32, y: 1920, width: 86, rotation: -1.9 },
+  { x: -30, y: 1970, width: 88, rotation: 1.2 },
+  { x: 0, y: 2140, width: 82, rotation: -1.6 },
+  { x: 25, y: 2280, width: 90, rotation: 1.4 },
+];
 
 const getFrameImage = (image, index, isMobile) => {
   if (!isMobile) return image;
 
-  const lane = mobileLanes[index % mobileLanes.length];
-  const round = Math.floor(index / mobileLanes.length);
-  const stagger = (index % 3) * 28 + ((index * 17) % 31);
+  const slot = mobileSlots[index % mobileSlots.length];
 
   return {
     ...image,
-    x: `${lane + ((round % 2) - 0.5) * 2.6}vw`,
-    y: 84 + round * 178 + stagger,
-    width: mobileWidths[index % mobileWidths.length],
-    rotation: mobileRotations[index % mobileRotations.length],
-    speed: 0.74 + (index % 5) * 0.035,
+    x: `${slot.x}vw`,
+    y: slot.y,
+    width: slot.width,
+    rotation: slot.rotation,
+    speed: 1,
   };
 };
 
@@ -52,7 +69,6 @@ export default function PreviewImageFlow() {
   const lastTimeRef = useRef(0);
   const [imageLimit, setImageLimit] = useState(getImageLimit);
   const images = useMemo(() => previewImages.slice(0, imageLimit), [imageLimit]);
-  const maxImageY = useMemo(() => Math.max(...images.map((image) => image.y)), [images]);
 
   useEffect(() => {
     const updateImageLimit = () => setImageLimit(getImageLimit());
@@ -70,7 +86,9 @@ export default function PreviewImageFlow() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     const isMobile = window.innerWidth < 768;
-    const baseSpeed = isMobile ? 34 : window.innerWidth <= 1080 ? 70 : 92;
+    const frameImages = images.map((image, index) => getFrameImage(image, index, isMobile));
+    const maxFrameY = Math.max(...frameImages.map((image) => image.y));
+    const baseSpeed = isMobile ? 102 : window.innerWidth <= 1080 ? 70 : 92;
     const scrollMultiplier = isMobile ? 0.22 : 0.36;
     const wheelMultiplier = isMobile ? 0.26 : 0.46;
 
@@ -87,7 +105,7 @@ export default function PreviewImageFlow() {
 
     const renderStaticWall = () => {
       cardRefs.current.forEach((card, index) => {
-        const image = getFrameImage(images[index], index, window.innerWidth < 768);
+        const image = frameImages[index];
         if (!card || !image) return;
 
         const staticY = 76 + (index % 8) * 68 + Math.floor(index / 8) * 18;
@@ -122,10 +140,10 @@ export default function PreviewImageFlow() {
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
       const extraHeight = Math.max(isMobile ? 220 : 160, viewportHeight * (isMobile ? 0.34 : 0.26));
-      const loopHeight = Math.max(viewportHeight + extraHeight * 2, maxImageY + extraHeight + 120);
+      const loopHeight = Math.max(viewportHeight + extraHeight * 2, maxFrameY + extraHeight + 120);
 
       cardRefs.current.forEach((card, index) => {
-        const image = getFrameImage(images[index], index, isMobile);
+        const image = frameImages[index];
         if (!card || !image) return;
 
         const rawY = image.y - flowOffsetRef.current * image.speed;
@@ -160,7 +178,7 @@ export default function PreviewImageFlow() {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("wheel", handleWheel);
     };
-  }, [images, maxImageY]);
+  }, [images]);
 
   return (
     <section className="preview-image-flow" aria-label="AIGC visual works preview" ref={sectionRef}>

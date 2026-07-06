@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function FilterTabs({ items, active, onChange, language = "zh" }) {
   return (
     <div className="filter-tabs reveal">

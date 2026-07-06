@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function SectionTitle({ eyebrow, title, intro }) {
   return (
     <div className="section-title reveal">

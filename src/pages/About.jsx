@@ -1,3 +1,6 @@
+import React, { useState } from "react";
+
+import BackButton from "../components/BackButton.jsx";
 import { profile } from "../data/profile.js";
 
 const strengths = [
@@ -48,8 +51,18 @@ const experience = [
 ];
 
 export default function About({ copy, sectionId, embedded = false }) {
+  const [openExperience, setOpenExperience] = useState({});
+
+  const toggleExperience = (number) => {
+    setOpenExperience((current) => ({
+      ...current,
+      [number]: !current[number],
+    }));
+  };
+
   return (
     <section id={sectionId} className={embedded ? "page-section anchor-section about-section" : "page-section page-top about-section"}>
+      {!embedded && <BackButton />}
       <div className="about-reference-grid">
         <div className="about-title-card reveal">
           <span>/// ABOUT ///</span>
@@ -61,25 +74,26 @@ export default function About({ copy, sectionId, embedded = false }) {
         </figure>
 
         <div className="about-identity reveal">
-          <h3>{profile.name}</h3>
-          <strong>AIGC设计师</strong>
-          <p>
-            专注 AI 商业视觉、服装模特、珠宝佩戴、产品图像、AI 视频与工作流搭建，能够从需求理解、视觉生成、精修到商业交付完成完整流程。
-          </p>
+          <div className="about-intro-heading">
+            <h3>李&nbsp;&nbsp;柳</h3>
+            <strong>AIGC设计师</strong>
+          </div>
         </div>
 
-        <div className="about-strength-panel reveal">
-          <div className="about-block-heading">
-            <h3>核心优势</h3>
-          </div>
-          <div className="strength-grid">
-            {strengths.map(([number, title, text]) => (
-              <article className="strength-card" key={number}>
-                <span>{number}</span>
-                <h4>{title}</h4>
-                <p>{text}</p>
-              </article>
-            ))}
+        <div className="about-right-panel reveal">
+          <div className="about-strength-panel">
+            <div className="about-block-heading">
+              <h3>核心优势</h3>
+            </div>
+            <div className="strength-grid">
+              {strengths.map(([number, title, text]) => (
+                <article className="strength-card" key={number}>
+                  <span>{number}</span>
+                  <h4>{title}</h4>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -98,7 +112,20 @@ export default function About({ copy, sectionId, embedded = false }) {
                 <div className="experience-copy">
                   <h4>{item.title}</h4>
                   <span>{item.role}</span>
-                  {Array.isArray(item.text) ? item.text.map((text, index) => <p key={index}>{text}</p>) : <p>{item.text}</p>}
+                  <button
+                    className="experience-toggle"
+                    type="button"
+                    aria-label={`${openExperience[item.number] ? "收起" : "展开"}${item.role}详情`}
+                    aria-expanded={Boolean(openExperience[item.number])}
+                    onClick={() => toggleExperience(item.number)}
+                  >
+                    <span className="experience-chevron" aria-hidden="true" />
+                  </button>
+                  {openExperience[item.number] && (
+                    <div className="experience-detail">
+                      {Array.isArray(item.text) ? item.text.map((text, index) => <p key={index}>{text}</p>) : <p>{item.text}</p>}
+                    </div>
+                  )}
                 </div>
               </article>
             ))}

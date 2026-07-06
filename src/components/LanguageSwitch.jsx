@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function LanguageSwitch({ language, setLanguage }) {
   return (
     <div className="language-switch" aria-label="Language switch">

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import LoadingImage from "./LoadingImage.jsx";
 
 const imageSource = (image) => (typeof image === "string" ? image : image.src);
 const imageAlt = (image) => (typeof image === "string" ? "AI portfolio visual" : image.alt);
@@ -49,7 +50,7 @@ export default function ImageGrid({ images, compact = false, className = "", hov
               type="button"
               onClick={() => setPreviewIndex(index)}
             >
-              <img src={src} alt={imageAlt(image)} loading="lazy" />
+              <LoadingImage src={src} alt={imageAlt(image)} loading={index < 2 ? "eager" : "lazy"} fetchPriority={index < 2 ? "high" : "auto"} />
               {hoverLabel && <span className="image-tile-hint">{hoverLabel}</span>}
             </button>
           );

@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 import FilterTabs from "../components/FilterTabs.jsx";
 import ImageGrid from "../components/ImageGrid.jsx";
 import LookbookGallery from "../components/LookbookGallery.jsx";
@@ -29,6 +30,7 @@ export default function ProjectDetail({ copy, language }) {
   if (!project) {
     return (
       <section className="page-section page-top">
+        <BackButton />
         <SectionTitle title="项目未找到" intro="请返回作品列表查看当前可访问的作品。" />
         <Link className="button primary" to="/#works">
           {copy.common.backToWorks}
@@ -58,6 +60,7 @@ export default function ProjectDetail({ copy, language }) {
 
   return (
     <article className="page-section page-top detail-page">
+      <BackButton />
       {hideDetailHero ? null : (
         <div className={["detail-hero reveal", hideDetailIntroSections ? "no-media" : ""].filter(Boolean).join(" ")}>
           <div>
@@ -228,9 +231,7 @@ export default function ProjectDetail({ copy, language }) {
             {project.loraSections.map((section) => (
               <article className="lora-section reveal" key={section.title}>
                 <h3>{section.title}</h3>
-                <div className="lora-image-tile">
-                  <img src={section.image} alt={section.title} />
-                </div>
+                <ImageGrid images={[{ src: section.image, alt: section.title }]} className="natural lora-image-grid" />
               </article>
             ))}
           </div>

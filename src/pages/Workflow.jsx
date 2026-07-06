@@ -1,3 +1,6 @@
+import React from "react";
+
+import BackButton from "../components/BackButton.jsx";
 import ProcessStep from "../components/ProcessStep.jsx";
 import SectionTitle from "../components/SectionTitle.jsx";
 
@@ -17,6 +20,7 @@ const capabilities = ["ComfyUI Workflow", "LoRA Training", "Model Consistency", 
 export default function Workflow({ copy }) {
   return (
     <section className="page-section page-top">
+      <BackButton />
       <SectionTitle title={copy.pages.workflowTitle} intro={copy.pages.workflowIntro} />
       <div className="workflow-line reveal">
         {workflowSteps.map(([number, title]) => (

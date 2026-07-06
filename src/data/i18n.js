@@ -27,7 +27,7 @@ export const i18n = {
       subtitle: "AI 商业视觉 / 服装模特 / 珠宝佩戴 / 产品图像 / AI 视频 / 工作流",
       intro:
         "我专注于 AI 商业视觉创作，结合建筑设计背景与 AIGC 工作流能力，完成从需求拆解、视觉生成、局部修复、批量产出到商业交付的完整流程。",
-      tags: ["AI 商业视觉", "AI 服装模特", "AI Lookbook", "珠宝佩戴视觉", "产品商业图", "AI 视频", "AI 工作流", "ComfyUI", "商业交付 SOP"],
+      tags: ["AI 商业视觉", "AI 服装模特", "珠宝佩戴视觉", "产品商业图", "AI 视频", "AI 工作流", "ComfyUI", "商业交付 SOP"],
       aboutTitle: "关于我",
       about:
         "我拥有建筑设计背景，具备空间审美、画面构图与商业表达能力。转向 AIGC 后，主要聚焦 AI 商业视觉、AI 模特、珠宝佩戴、产品图像、AI 视频与工作流搭建。",
@@ -73,7 +73,7 @@ export const i18n = {
       subtitle: "AI Visual / Fashion Model / Jewelry Try-on / Product Image / AI Video / Workflow",
       intro:
         "I create AI-driven commercial visuals with an architectural design background and AIGC workflow capability, covering brief analysis, visual generation, refinement, batch output, and final delivery.",
-      tags: ["AI Visual", "AI Fashion", "AI Lookbook", "AI Jewelry", "Product Visual", "AI Video", "AI Workflow", "ComfyUI", "Commercial SOP"],
+      tags: ["AI Visual", "AI Fashion", "AI Jewelry", "Product Visual", "AI Video", "AI Workflow", "ComfyUI", "Commercial SOP"],
       aboutTitle: "About",
       about:
         "With a background in architectural design, I work across AI commercial visuals, AI models, jewelry try-on, product imagery, AI video, and workflow systems.",

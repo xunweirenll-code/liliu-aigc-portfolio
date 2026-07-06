@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import BackButton from "../components/BackButton.jsx";
 import { profile } from "../data/profile.js";
 
 const copyToClipboard = async (value) => {
@@ -45,6 +46,7 @@ export default function Contact({ copy, sectionId, embedded = false }) {
 
   return (
     <section id={sectionId} className={embedded ? "page-section anchor-section contact-page" : "page-section page-top contact-page"}>
+      {!embedded && <BackButton />}
       <div className="contact-layout reveal">
         <div className="contact-left">
           <span className="contact-label">Contact</span>

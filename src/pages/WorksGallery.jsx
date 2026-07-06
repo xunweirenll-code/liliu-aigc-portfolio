@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import CircularGallery from "../components/CircularGallery.jsx";
 import { projectGroups, projects } from "../data/projects.js";
 

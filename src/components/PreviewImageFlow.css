@@ -172,14 +172,14 @@
 
 @media (max-width: 760px) {
   .preview-image-flow {
-    height: 142vh;
-    min-height: 760px;
+    height: 95vh;
+    min-height: 520px;
     border-radius: 22px 22px 0 0;
   }
 
   .preview-image-flow-sticky {
-    min-height: 86vh;
-    min-height: 86svh;
+    min-height: 70vh;
+    min-height: 70svh;
   }
 
   .preview-image-flow-title {
@@ -200,7 +200,7 @@
   .preview-flow-card {
     width: min(var(--flow-width), 96px);
     max-width: 25vw;
-    min-width: 58px;
+    min-width: 72px;
   }
 
   .preview-flow-card img {

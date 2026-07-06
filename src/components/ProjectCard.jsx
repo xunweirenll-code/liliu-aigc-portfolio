@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import LoadingImage from "./LoadingImage.jsx";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
 
-export default function ProjectCard({ project, copy }) {
+export default function ProjectCard({ project, copy, priority = false }) {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [hoverVideoReady, setHoverVideoReady] = useState(false);
   const hoverVideoRef = useRef(null);
   const previewVideoRef = useRef(null);
   const primaryVideo = project.videos?.[0];
@@ -78,14 +80,18 @@ export default function ProjectCard({ project, copy }) {
           onClick={() => setPreviewOpen(true)}
         >
           <figure>
+            {!hoverVideoReady && <span className="image-loading-indicator" aria-hidden="true" />}
             <video
               ref={hoverVideoRef}
               src={primaryVideo}
               poster={project.cover}
               muted
               playsInline
-              preload="metadata"
+              preload={priority ? "auto" : "metadata"}
               loop
+              className={hoverVideoReady ? "is-loaded" : "is-loading"}
+              onLoadedData={() => setHoverVideoReady(true)}
+              onError={() => setHoverVideoReady(true)}
               style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
             />
             <span className="project-hover-icon" aria-hidden="true" />
@@ -128,10 +134,11 @@ export default function ProjectCard({ project, copy }) {
     >
       <figure>
         {project.cover ? (
-          <img
+          <LoadingImage
             src={project.cover}
             alt={project.title}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
             style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
           />
         ) : (
