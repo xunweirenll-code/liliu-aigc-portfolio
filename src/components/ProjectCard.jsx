@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LoadingImage from "./LoadingImage.jsx";
 import ProtectedVideoPlayer from "./ProtectedVideoPlayer.jsx";
 import { protectedVideoProps } from "../utils/mediaProtection.js";
@@ -11,14 +11,17 @@ export default function ProjectCard({ project, copy, priority = false }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [hoverVideoReady, setHoverVideoReady] = useState(false);
   const hoverVideoRef = useRef(null);
+  const location = useLocation();
   const primaryVideo = project.videos?.[0];
   const isVideoProject = project.group === "commercial-video" && primaryVideo;
+  const returnTo = location.pathname === "/" ? "/#works" : `${location.pathname}${location.search}${location.hash}`;
 
   const rememberReturnPosition = (event) => {
     const cardTop = event.currentTarget.getBoundingClientRect().top;
     window.sessionStorage.setItem(
       WORKS_RETURN_KEY,
       JSON.stringify({
+        returnTo,
         slug: project.slug,
         scrollY: window.scrollY,
         cardTop,
@@ -126,6 +129,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
       id={`project-card-${project.slug}`}
       className="project-card reveal"
       to={`/works/${project.slug}`}
+      state={{ returnTo }}
       onClick={rememberReturnPosition}
     >
       <figure>

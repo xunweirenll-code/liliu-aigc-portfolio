@@ -23,8 +23,60 @@ export default function App() {
   const copy = useMemo(() => i18n[language], [language]);
 
   useEffect(() => {
+    const currentReturnTo = `${location.pathname}${location.search}${location.hash}`;
+    const canRestoreStoredReturn = (location.pathname === "/" && location.hash === "#works") || location.pathname === "/works";
+
+    const restoreStoredReturnPosition = () => {
+      const storedReturn = window.sessionStorage.getItem(WORKS_RETURN_KEY);
+      if (!storedReturn) return false;
+
+      let parsedReturn;
+      try {
+        parsedReturn = JSON.parse(storedReturn);
+      } catch {
+        window.sessionStorage.removeItem(WORKS_RETURN_KEY);
+        return false;
+      }
+
+      if (parsedReturn.returnTo && parsedReturn.returnTo !== currentReturnTo) {
+        return false;
+      }
+
+      const restoreReturnPosition = () => {
+        const { slug, scrollY, cardTop } = parsedReturn;
+        const card = document.getElementById(`project-card-${slug}`);
+
+        if (card && Number.isFinite(cardTop)) {
+          const cardDocumentTop = window.scrollY + card.getBoundingClientRect().top;
+          window.scrollTo({ top: Math.max(0, cardDocumentTop - cardTop), left: 0, behavior: "auto" });
+          return;
+        }
+
+        if (Number.isFinite(scrollY)) {
+          window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
+          return;
+        }
+
+        if (location.pathname === "/" && location.hash === "#works") {
+          document.getElementById("works")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      };
+
+      window.setTimeout(restoreReturnPosition, 0);
+      window.setTimeout(() => {
+        restoreReturnPosition();
+        window.sessionStorage.removeItem(WORKS_RETURN_KEY);
+      }, 150);
+      return true;
+    };
+
     if (location.pathname !== "/") {
       setActiveSection(location.hash ? location.hash.slice(1) : "");
+
+      if (canRestoreStoredReturn && restoreStoredReturnPosition()) {
+        return;
+      }
+
       window.setTimeout(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       }, 0);
@@ -32,33 +84,7 @@ export default function App() {
     }
 
     if (location.hash === "#works") {
-      const storedReturn = window.sessionStorage.getItem(WORKS_RETURN_KEY);
-
-      if (storedReturn) {
-        const restoreReturnPosition = () => {
-          try {
-            const { slug, scrollY, cardTop } = JSON.parse(storedReturn);
-            const card = document.getElementById(`project-card-${slug}`);
-
-            if (card && Number.isFinite(cardTop)) {
-              const cardDocumentTop = window.scrollY + card.getBoundingClientRect().top;
-              window.scrollTo({ top: Math.max(0, cardDocumentTop - cardTop), left: 0, behavior: "auto" });
-              return;
-            }
-
-            if (Number.isFinite(scrollY)) {
-              window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
-            }
-          } catch {
-            document.getElementById("works")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        };
-
-        window.setTimeout(restoreReturnPosition, 0);
-        window.setTimeout(() => {
-          restoreReturnPosition();
-          window.sessionStorage.removeItem(WORKS_RETURN_KEY);
-        }, 150);
+      if (restoreStoredReturnPosition()) {
         return;
       }
     }
@@ -67,7 +93,7 @@ export default function App() {
     window.setTimeout(() => {
       document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 0);
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     if (location.pathname !== "/") return undefined;

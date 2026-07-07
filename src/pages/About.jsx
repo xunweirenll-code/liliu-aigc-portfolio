@@ -13,7 +13,7 @@ const strengths = [
   [
     "02",
     "AI 工作流与技术应用能力",
-    "熟悉 ComfyUI、Stable Diffusion、Midjourney、Flux、Qwen Image、seedance、Nana Banana、GPT-image2 等工具与模型，掌握文生图、图生图、局部重绘、一致性控制、高清放大、LoRA 训练等核心流程。",
+    "熟悉 ComfyUI、Stable Diffusion、Midjourney、Flux、Qwen Image、seedance、Nano Banana、GPT-image2 等工具与模型，掌握文生图、图生图、局部重绘、一致性控制、高清放大、LoRA 训练等核心流程。",
   ],
   [
     "03",
