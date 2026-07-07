@@ -3,17 +3,20 @@ import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import LoadingImage from "./LoadingImage.jsx";
 import ProtectedVideoPlayer from "./ProtectedVideoPlayer.jsx";
+import useProtectedVideoSource from "../hooks/useProtectedVideoSource.js";
 import { protectedMediaSurfaceProps, protectedVideoProps } from "../utils/mediaProtection.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
 
 export default function ProjectCard({ project, copy, priority = false }) {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [canHoverPreview, setCanHoverPreview] = useState(false);
   const [hoverVideoReady, setHoverVideoReady] = useState(false);
   const hoverVideoRef = useRef(null);
   const location = useLocation();
   const primaryVideo = project.videos?.[0];
   const isVideoProject = project.group === "commercial-video" && primaryVideo;
+  const protectedPrimaryVideo = useProtectedVideoSource(isVideoProject && canHoverPreview ? primaryVideo : "");
   const returnTo = location.pathname === "/" ? "/#works" : `${location.pathname}${location.search}${location.hash}`;
 
   const rememberReturnPosition = (event) => {
@@ -31,7 +34,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
 
   const playHoverPreview = () => {
     const video = hoverVideoRef.current;
-    if (!video) return;
+    if (!video || !protectedPrimaryVideo) return;
 
     video.currentTime = 0;
     video.play().catch(() => {});
@@ -47,6 +50,20 @@ export default function ProjectCard({ project, copy, priority = false }) {
   };
 
   const closePreview = () => setPreviewOpen(false);
+
+  useEffect(() => {
+    setHoverVideoReady(false);
+  }, [protectedPrimaryVideo]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.("(hover: hover) and (pointer: fine)");
+    if (!mediaQuery) return undefined;
+
+    const updateHoverPreview = () => setCanHoverPreview(mediaQuery.matches);
+    updateHoverPreview();
+    mediaQuery.addEventListener?.("change", updateHoverPreview);
+    return () => mediaQuery.removeEventListener?.("change", updateHoverPreview);
+  }, []);
 
   useEffect(() => {
     if (!previewOpen) return undefined;
@@ -78,21 +95,33 @@ export default function ProjectCard({ project, copy, priority = false }) {
           onClick={() => setPreviewOpen(true)}
         >
           <figure {...protectedMediaSurfaceProps}>
-            {!hoverVideoReady && <span className="image-loading-indicator" aria-hidden="true" />}
-            <video
-              {...protectedVideoProps}
-              ref={hoverVideoRef}
-              src={primaryVideo}
-              poster={project.cover}
-              muted
-              playsInline
-              preload={priority ? "auto" : "metadata"}
-              loop
-              className={hoverVideoReady ? "is-loaded" : "is-loading"}
-              onLoadedData={() => setHoverVideoReady(true)}
-              onError={() => setHoverVideoReady(true)}
-              style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
-            />
+            {canHoverPreview ? (
+              <>
+                {!hoverVideoReady && <span className="image-loading-indicator" aria-hidden="true" />}
+                <video
+                  {...protectedVideoProps}
+                  ref={hoverVideoRef}
+                  src={protectedPrimaryVideo || undefined}
+                  poster={project.cover}
+                  muted
+                  playsInline
+                  preload={priority ? "auto" : "metadata"}
+                  loop
+                  className={hoverVideoReady ? "is-loaded" : "is-loading"}
+                  onLoadedData={() => setHoverVideoReady(true)}
+                  onError={() => setHoverVideoReady(true)}
+                  style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
+                />
+              </>
+            ) : (
+              <LoadingImage
+                src={project.cover}
+                alt={project.title}
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
+                style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
+              />
+            )}
             <span className="project-hover-icon" aria-hidden="true" />
           </figure>
           <div className="card-copy">

@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import useProtectedVideoSource from "../hooks/useProtectedVideoSource.js";
 import { protectedMediaSurfaceProps, protectedVideoProps } from "../utils/mediaProtection.js";
 
 const formatTime = (seconds) => {
@@ -33,12 +34,13 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMuted, setIsMuted] = useState(muted);
   const [isPlaying, setIsPlaying] = useState(false);
+  const protectedSrc = useProtectedVideoSource(src);
 
   useImperativeHandle(ref, () => videoRef.current);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return undefined;
+    if (!video || !protectedSrc) return undefined;
 
     video.muted = muted;
     setIsMuted(muted);
@@ -48,7 +50,7 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
     }
 
     return undefined;
-  }, [autoPlay, muted, src]);
+  }, [autoPlay, muted, protectedSrc]);
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -61,7 +63,7 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
 
   const updateTime = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !protectedSrc) return;
 
     setCurrentTime(video.currentTime);
     setDuration(video.duration || 0);
@@ -123,7 +125,7 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
     >
       <video
         {...protectedVideoProps}
-        src={src}
+        src={protectedSrc || undefined}
         poster={poster}
         playsInline
         preload={preload}
@@ -138,8 +140,8 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
         onTimeUpdate={updateTime}
       />
       <div className="protected-video-controls" onClick={stopControlClick}>
-        <button className="protected-video-button" type="button" aria-label={isPlaying ? "Pause" : "Play"} onClick={togglePlay}>
-          {isPlaying ? "Pause" : "Play"}
+        <button className="protected-video-button protected-video-play-button" type="button" aria-label={isPlaying ? "暂停" : "播放"} onClick={togglePlay}>
+          <span aria-hidden="true">{isPlaying ? "Ⅱ" : "▶"}</span>
         </button>
         <span className="protected-video-time">
           {formatTime(currentTime)} / {formatTime(duration)}
@@ -151,14 +153,14 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
           max="100"
           step="0.1"
           value={progress}
-          aria-label="Playback progress"
+          aria-label="播放进度"
           onChange={seek}
         />
-        <button className="protected-video-button" type="button" aria-label={isMuted ? "Unmute" : "Mute"} onClick={toggleMute}>
-          {isMuted ? "Muted" : "Vol"}
+        <button className="protected-video-button" type="button" aria-label={isMuted ? "取消静音" : "静音"} onClick={toggleMute}>
+          {isMuted ? "静音" : "声音"}
         </button>
-        <button className="protected-video-button" type="button" aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"} onClick={toggleFullscreen}>
-          Full
+        <button className="protected-video-button protected-video-fullscreen-button" type="button" aria-label={isFullscreen ? "退出全屏" : "全屏"} onClick={toggleFullscreen}>
+          全屏
         </button>
       </div>
     </div>
