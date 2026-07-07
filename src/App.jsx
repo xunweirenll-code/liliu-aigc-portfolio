@@ -135,17 +135,25 @@ export default function App() {
       }
     };
 
-    document.addEventListener("contextmenu", protectMedia);
-    document.addEventListener("dragstart", protectMedia);
-    document.addEventListener("copy", protectMedia);
-    document.addEventListener("cut", protectMedia);
+    const protectedEventOptions = { capture: true };
+
+    document.addEventListener("contextmenu", protectMedia, protectedEventOptions);
+    document.addEventListener("dragstart", protectMedia, protectedEventOptions);
+    document.addEventListener("selectstart", protectMedia, protectedEventOptions);
+    document.addEventListener("beforecopy", protectMedia, protectedEventOptions);
+    document.addEventListener("beforecut", protectMedia, protectedEventOptions);
+    document.addEventListener("copy", protectMedia, protectedEventOptions);
+    document.addEventListener("cut", protectMedia, protectedEventOptions);
     window.addEventListener("keydown", preventSaveShortcut);
 
     return () => {
-      document.removeEventListener("contextmenu", protectMedia);
-      document.removeEventListener("dragstart", protectMedia);
-      document.removeEventListener("copy", protectMedia);
-      document.removeEventListener("cut", protectMedia);
+      document.removeEventListener("contextmenu", protectMedia, protectedEventOptions);
+      document.removeEventListener("dragstart", protectMedia, protectedEventOptions);
+      document.removeEventListener("selectstart", protectMedia, protectedEventOptions);
+      document.removeEventListener("beforecopy", protectMedia, protectedEventOptions);
+      document.removeEventListener("beforecut", protectMedia, protectedEventOptions);
+      document.removeEventListener("copy", protectMedia, protectedEventOptions);
+      document.removeEventListener("cut", protectMedia, protectedEventOptions);
       window.removeEventListener("keydown", preventSaveShortcut);
     };
   }, []);

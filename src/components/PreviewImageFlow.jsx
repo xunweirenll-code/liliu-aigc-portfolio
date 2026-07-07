@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { previewImages } from "../data/previewImages.js";
-import { protectedImageProps } from "../utils/mediaProtection.js";
+import { protectedImageProps, protectedMediaSurfaceProps } from "../utils/mediaProtection.js";
 import "./PreviewImageFlow.css";
 
 const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
@@ -192,6 +192,7 @@ export default function PreviewImageFlow() {
         <div className="preview-image-flow-wall" aria-hidden="true">
           {images.map((image, index) => (
             <figure
+              {...protectedMediaSurfaceProps}
               className="preview-flow-card"
               key={image.src}
               ref={(node) => {

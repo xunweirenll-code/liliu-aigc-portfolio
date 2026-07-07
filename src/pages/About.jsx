@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import BackButton from "../components/BackButton.jsx";
 import { profile } from "../data/profile.js";
-import { protectedImageProps } from "../utils/mediaProtection.js";
+import { protectedImageProps, protectedMediaSurfaceProps } from "../utils/mediaProtection.js";
 
 const strengths = [
   [
@@ -70,7 +70,7 @@ export default function About({ copy, sectionId, embedded = false }) {
           <h2>{copy.pages.aboutTitle}</h2>
         </div>
 
-        <figure className="about-photo reveal">
+        <figure className="about-photo reveal" {...protectedMediaSurfaceProps}>
           <img {...protectedImageProps} src="/assets/images/profile/profile-01.webp" alt={`${profile.name}个人照片`} loading="lazy" />
         </figure>
 

@@ -548,6 +548,7 @@ export default function CircularGallery({
   return (
     <div
       className="circular-gallery"
+      data-protected-media-surface="true"
       ref={containerRef}
       tabIndex={0}
       role="region"

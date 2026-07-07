@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import LoadingImage from "./LoadingImage.jsx";
 import ProtectedVideoPlayer from "./ProtectedVideoPlayer.jsx";
-import { protectedVideoProps } from "../utils/mediaProtection.js";
+import { protectedMediaSurfaceProps, protectedVideoProps } from "../utils/mediaProtection.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
 
@@ -77,7 +77,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
           onBlur={stopHoverPreview}
           onClick={() => setPreviewOpen(true)}
         >
-          <figure>
+          <figure {...protectedMediaSurfaceProps}>
             {!hoverVideoReady && <span className="image-loading-indicator" aria-hidden="true" />}
             <video
               {...protectedVideoProps}
@@ -109,9 +109,9 @@ export default function ProjectCard({ project, copy, priority = false }) {
 
         {previewOpen &&
           createPortal(
-            <div className="video-preview-lightbox" role="dialog" aria-modal="true" aria-label={project.title}>
+            <div className="video-preview-lightbox" role="dialog" aria-modal="true" aria-label={project.title} {...protectedMediaSurfaceProps}>
               <button className="video-preview-backdrop" type="button" aria-label="关闭" onClick={closePreview} />
-              <div className="video-preview-frame">
+              <div className="video-preview-frame" {...protectedMediaSurfaceProps}>
                 <ProtectedVideoPlayer src={primaryVideo} poster={project.cover} autoPlay preload="auto" className="video-preview-player" />
               </div>
               <button className="video-preview-close" type="button" aria-label="关闭" onClick={closePreview}>
@@ -132,7 +132,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
       state={{ returnTo }}
       onClick={rememberReturnPosition}
     >
-      <figure>
+      <figure {...protectedMediaSurfaceProps}>
         {project.cover ? (
           <LoadingImage
             src={project.cover}

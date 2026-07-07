@@ -88,10 +88,17 @@ video {
 
 img,
 video,
-[data-protected-media="true"] {
+[data-protected-media="true"],
+[data-protected-media-surface="true"] {
   -webkit-user-drag: none;
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   user-select: none;
+}
+
+[data-protected-media="true"] {
+  pointer-events: none;
 }
 
 h1,
@@ -990,6 +997,10 @@ p {
   max-width: 860px;
 }
 
+.detail-hero > figure {
+  margin: 0;
+}
+
 .detail-hero img {
   aspect-ratio: 4 / 5;
   object-fit: cover;
@@ -1705,7 +1716,7 @@ p {
   max-width: calc(100vw - 192px);
   max-height: calc(100vh - 60px);
   object-fit: contain;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .lightbox-nav,
@@ -1823,6 +1834,8 @@ p {
   place-items: center;
   width: 100%;
   background: #000000;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .protected-video-player video {
@@ -1832,7 +1845,7 @@ p {
   max-height: 82vh;
   object-fit: contain;
   background: #000000;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 .protected-video-controls {

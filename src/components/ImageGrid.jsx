@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import LoadingImage from "./LoadingImage.jsx";
-import { protectedImageProps } from "../utils/mediaProtection.js";
+import { protectedImageProps, protectedMediaSurfaceProps } from "../utils/mediaProtection.js";
 
 const imageSource = (image) => (typeof image === "string" ? image : image.src);
 const imageAlt = (image) => (typeof image === "string" ? "AI portfolio visual" : image.alt);
@@ -46,6 +46,7 @@ export default function ImageGrid({ images, compact = false, className = "", hov
           const src = imageSource(image);
           return (
             <button
+              {...protectedMediaSurfaceProps}
               className={["image-tile reveal", hoverLabel ? "has-hint" : ""].filter(Boolean).join(" ")}
               key={`${src}-${index}`}
               type="button"
@@ -59,12 +60,12 @@ export default function ImageGrid({ images, compact = false, className = "", hov
       </div>
       {previewSrc &&
         createPortal(
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label={previewAlt}>
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label={previewAlt} {...protectedMediaSurfaceProps}>
           <button className="lightbox-backdrop" type="button" aria-label="关闭" onClick={closePreview} />
           <button className="lightbox-nav previous" type="button" aria-label="上一张" onClick={showPrevious}>
             ‹
           </button>
-          <figure className="lightbox-frame">
+          <figure className="lightbox-frame" {...protectedMediaSurfaceProps}>
             <img {...protectedImageProps} src={previewSrc} alt={previewAlt} />
           </figure>
           <button className="lightbox-nav next" type="button" aria-label="下一张" onClick={showNext}>

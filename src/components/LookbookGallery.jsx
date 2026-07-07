@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import LoadingImage from "./LoadingImage.jsx";
-import { protectedImageProps } from "../utils/mediaProtection.js";
+import { protectedImageProps, protectedMediaSurfaceProps } from "../utils/mediaProtection.js";
 
 const languageText = {
   zh: {
@@ -86,7 +86,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
                 aria-label={`${language === "en" ? group.enTitle : group.title} ${copy.viewLook}`}
                 onClick={() => openGroup(groupIndex, selectedImageIndex)}
               >
-                <figure>
+                <figure {...protectedMediaSurfaceProps}>
                   <LoadingImage className="lookbook-cover-image" src={selectedImage.src} alt={selectedImage.alt} loading={groupIndex < 2 ? "eager" : "lazy"} fetchPriority={groupIndex < 2 ? "high" : "auto"} />
                   <span aria-hidden="true">{copy.viewLook}</span>
                 </figure>
@@ -114,6 +114,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
 
       {activeGroup && activeImage && (
         <div
+          {...protectedMediaSurfaceProps}
           className={["lookbook-lightbox", className ? `${className}-lightbox` : ""].filter(Boolean).join(" ")}
           role="dialog"
           aria-modal="true"
@@ -137,7 +138,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
               <button className="lookbook-nav previous" type="button" aria-label={copy.previous} onClick={showPrevious}>
                 ‹
               </button>
-              <figure>
+              <figure {...protectedMediaSurfaceProps}>
                 <img {...protectedImageProps} src={activeImage.src} alt={activeImage.alt} />
                 <figcaption>
                   <span>{activeImageIndex + 1} / {imageCount}</span>
@@ -152,6 +153,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
             <div className="lookbook-thumbnails" aria-label="Lookbook thumbnails">
               {activeGroup.images.map((image, imageIndex) => (
                 <button
+                  {...protectedMediaSurfaceProps}
                   className={imageIndex === activeImageIndex ? "active" : undefined}
                   key={image.id}
                   type="button"
