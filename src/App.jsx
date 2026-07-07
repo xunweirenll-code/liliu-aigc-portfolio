@@ -11,6 +11,7 @@ import Process from "./pages/Process.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import { i18n } from "./data/i18n.js";
+import { shouldProtectMediaEvent } from "./utils/mediaProtection.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
 const BUILD_VERSION = "20260706-cache-bust-1";
@@ -94,6 +95,34 @@ export default function App() {
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [location.pathname]);
+
+  useEffect(() => {
+    const protectMedia = (event) => {
+      if (shouldProtectMediaEvent(event)) {
+        event.preventDefault();
+      }
+    };
+
+    const preventSaveShortcut = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", protectMedia);
+    document.addEventListener("dragstart", protectMedia);
+    document.addEventListener("copy", protectMedia);
+    document.addEventListener("cut", protectMedia);
+    window.addEventListener("keydown", preventSaveShortcut);
+
+    return () => {
+      document.removeEventListener("contextmenu", protectMedia);
+      document.removeEventListener("dragstart", protectMedia);
+      document.removeEventListener("copy", protectMedia);
+      document.removeEventListener("cut", protectMedia);
+      window.removeEventListener("keydown", preventSaveShortcut);
+    };
+  }, []);
 
   return (
     <div className="site-shell" data-build-version={BUILD_VERSION}>

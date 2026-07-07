@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import LoadingImage from "./LoadingImage.jsx";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 const imageSource = (image) => (typeof image === "string" ? image : image.src);
 const imageAlt = (image) => (typeof image === "string" ? "AI portfolio visual" : image.alt);
@@ -64,7 +65,7 @@ export default function ImageGrid({ images, compact = false, className = "", hov
             ‹
           </button>
           <figure className="lightbox-frame">
-            <img src={previewSrc} alt={previewAlt} />
+            <img {...protectedImageProps} src={previewSrc} alt={previewAlt} />
           </figure>
           <button className="lightbox-nav next" type="button" aria-label="下一张" onClick={showNext}>
             ›

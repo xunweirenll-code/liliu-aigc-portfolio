@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import BackButton from "../components/BackButton.jsx";
 import { profile } from "../data/profile.js";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 const strengths = [
   [
@@ -36,7 +37,7 @@ const experience = [
   },
   {
     number: "02",
-    time: "2021-2025",
+    time: "2021.07-2024.10",
     title: "主创建筑师",
     role: "建学建筑与工程设计所有限公司深圳分公司",
     text: "负责建筑方案从概念到方案深化、交付的全流程把控，带领团队推进设计分工、进度管理、图面质量和节点交付，具备较强沟通协调、需求理解和方案汇报的能力。",
@@ -70,7 +71,7 @@ export default function About({ copy, sectionId, embedded = false }) {
         </div>
 
         <figure className="about-photo reveal">
-          <img src="/assets/images/profile/profile-01.webp" alt={`${profile.name}个人照片`} loading="lazy" />
+          <img {...protectedImageProps} src="/assets/images/profile/profile-01.webp" alt={`${profile.name}个人照片`} loading="lazy" />
         </figure>
 
         <div className="about-identity reveal">

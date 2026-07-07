@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 export default function LoadingImage({
   alt,
@@ -27,6 +28,7 @@ export default function LoadingImage({
     <>
       {!loaded && <span className="image-loading-indicator" aria-hidden="true" />}
       <img
+        {...protectedImageProps}
         className={[className, loaded ? "is-loaded" : "is-loading"].filter(Boolean).join(" ")}
         src={src}
         alt={alt}

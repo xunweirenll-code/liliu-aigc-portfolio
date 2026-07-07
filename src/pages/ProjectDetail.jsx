@@ -8,6 +8,7 @@ import SectionTitle from "../components/SectionTitle.jsx";
 import VideoCard from "../components/VideoCard.jsx";
 import { videos } from "../data/videos.js";
 import { accessoryLookbookGroups, fashionModelSections, lookbookCategories, lookbookGroups, projects } from "../data/projects.js";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 export default function ProjectDetail({ copy, language }) {
   const { slug } = useParams();
@@ -78,7 +79,7 @@ export default function ProjectDetail({ copy, language }) {
             )}
           </div>
           {hideDetailIntroSections ? null : project.cover ? (
-            <img src={project.cover} alt={project.title} />
+            <img {...protectedImageProps} src={project.cover} alt={project.title} />
           ) : (
             <div className="detail-placeholder">
               <span>{project.group}</span>

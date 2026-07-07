@@ -18,14 +18,15 @@ export default function Works({ copy, sectionId, embedded = false }) {
                 <span className="work-group-number">{group.number}</span>
                 {group.title}
               </h2>
-              <p>{group.description}</p>
             </div>
 
             <div className="work-category-stack">
               {group.categories.map((category) => {
                 const categoryProjects = category.projectSlugs
                   .map((slug) => projectsBySlug.get(slug))
-                  .filter(Boolean);
+                  .filter((project) => project && !project.hiddenInWorks);
+
+                if (!categoryProjects.length) return null;
 
                 return (
                   <section className="work-category" key={category.id}>

@@ -2,6 +2,7 @@ import React from "react";
 
 import BackButton from "../components/BackButton.jsx";
 import SectionTitle from "../components/SectionTitle.jsx";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 export default function Process({ copy, sectionId, embedded = false }) {
   return (
@@ -9,7 +10,7 @@ export default function Process({ copy, sectionId, embedded = false }) {
       {!embedded && <BackButton />}
       <SectionTitle title={copy.pages.processTitle} intro={copy.pages.processIntro} />
       <figure className="process-visual reveal">
-        <img src="/assets/images/liucheng/liucheng.png" alt="创作流程图" loading="lazy" />
+        <img {...protectedImageProps} src="/assets/images/liucheng/liucheng.png" alt="创作流程图" loading="lazy" />
       </figure>
     </section>
   );

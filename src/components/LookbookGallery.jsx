@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import LoadingImage from "./LoadingImage.jsx";
+import { protectedImageProps } from "../utils/mediaProtection.js";
 
 const languageText = {
   zh: {
@@ -137,7 +138,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
                 ‹
               </button>
               <figure>
-                <img src={activeImage.src} alt={activeImage.alt} />
+                <img {...protectedImageProps} src={activeImage.src} alt={activeImage.alt} />
                 <figcaption>
                   <span>{activeImageIndex + 1} / {imageCount}</span>
                   <strong>{language === "en" ? activeImage.enViewLabel : activeImage.viewLabel}</strong>
@@ -157,7 +158,7 @@ export default function LookbookGallery({ groups, language = "zh", className = "
                   aria-label={`${copy.thumbnail} ${language === "en" ? image.enViewLabel : image.viewLabel}`}
                   onClick={() => setActiveImageIndex(imageIndex)}
                 >
-                  <img src={image.src} alt={image.alt} />
+                  <img {...protectedImageProps} src={image.src} alt={image.alt} />
                   <span>{language === "en" ? image.enViewLabel : image.viewLabel}</span>
                 </button>
               ))}

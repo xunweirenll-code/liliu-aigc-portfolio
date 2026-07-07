@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import LoadingImage from "./LoadingImage.jsx";
+import ProtectedVideoPlayer from "./ProtectedVideoPlayer.jsx";
+import { protectedVideoProps } from "../utils/mediaProtection.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
 
@@ -9,7 +11,6 @@ export default function ProjectCard({ project, copy, priority = false }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [hoverVideoReady, setHoverVideoReady] = useState(false);
   const hoverVideoRef = useRef(null);
-  const previewVideoRef = useRef(null);
   const primaryVideo = project.videos?.[0];
   const isVideoProject = project.group === "commercial-video" && primaryVideo;
 
@@ -47,12 +48,6 @@ export default function ProjectCard({ project, copy, priority = false }) {
   useEffect(() => {
     if (!previewOpen) return undefined;
 
-    const previewVideo = previewVideoRef.current;
-    if (previewVideo) {
-      previewVideo.currentTime = 0;
-      previewVideo.play().catch(() => {});
-    }
-
     const onKeyDown = (event) => {
       if (event.key === "Escape") closePreview();
     };
@@ -82,6 +77,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
           <figure>
             {!hoverVideoReady && <span className="image-loading-indicator" aria-hidden="true" />}
             <video
+              {...protectedVideoProps}
               ref={hoverVideoRef}
               src={primaryVideo}
               poster={project.cover}
@@ -113,7 +109,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
             <div className="video-preview-lightbox" role="dialog" aria-modal="true" aria-label={project.title}>
               <button className="video-preview-backdrop" type="button" aria-label="关闭" onClick={closePreview} />
               <div className="video-preview-frame">
-                <video ref={previewVideoRef} src={primaryVideo} poster={project.cover} controls autoPlay playsInline preload="auto" />
+                <ProtectedVideoPlayer src={primaryVideo} poster={project.cover} autoPlay preload="auto" className="video-preview-player" />
               </div>
               <button className="video-preview-close" type="button" aria-label="关闭" onClick={closePreview}>
                 ×
