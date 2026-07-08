@@ -44,13 +44,26 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
 
     video.muted = muted;
     setIsMuted(muted);
-
-    if (autoPlay) {
-      video.play().catch(() => {});
-    }
+    video.load();
 
     return undefined;
-  }, [autoPlay, muted, protectedSrc]);
+  }, [muted, protectedSrc]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !protectedSrc || !autoPlay) return undefined;
+
+    const playVideo = () => {
+      video.play().catch(() => {});
+    };
+
+    if (autoPlay) {
+      playVideo();
+      video.addEventListener("canplay", playVideo, { once: true });
+    }
+
+    return () => video.removeEventListener("canplay", playVideo);
+  }, [autoPlay, protectedSrc]);
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -129,6 +142,7 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
         poster={poster}
         playsInline
         preload={preload}
+        autoPlay={autoPlay}
         loop={loop}
         muted={muted}
         ref={videoRef}

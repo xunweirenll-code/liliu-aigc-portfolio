@@ -141,7 +141,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
             <div className="video-preview-lightbox" role="dialog" aria-modal="true" aria-label={project.title} {...protectedMediaSurfaceProps}>
               <button className="video-preview-backdrop" type="button" aria-label="关闭" onClick={closePreview} />
               <div className="video-preview-frame" {...protectedMediaSurfaceProps}>
-                <ProtectedVideoPlayer src={primaryVideo} poster={project.cover} autoPlay preload="auto" className="video-preview-player" />
+                <ProtectedVideoPlayer src={primaryVideo} poster={project.cover} autoPlay muted preload="auto" className="video-preview-player" />
               </div>
               <button className="video-preview-close" type="button" aria-label="关闭" onClick={closePreview}>
                 ×
