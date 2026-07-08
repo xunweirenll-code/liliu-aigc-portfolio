@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import LoadingImage from "./LoadingImage.jsx";
 import ProtectedVideoPlayer from "./ProtectedVideoPlayer.jsx";
@@ -7,12 +7,14 @@ import useProtectedVideoSource from "../hooks/useProtectedVideoSource.js";
 import { protectedMediaSurfaceProps, protectedVideoProps } from "../utils/mediaProtection.js";
 
 const WORKS_RETURN_KEY = "portfolio:worksReturn";
+const PREVIEW_VOLUME = 0.28;
 
 export default function ProjectCard({ project, copy, priority = false }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [canHoverPreview, setCanHoverPreview] = useState(false);
   const [hoverVideoReady, setHoverVideoReady] = useState(false);
   const hoverVideoRef = useRef(null);
+  const previewVideoRef = useRef(null);
   const location = useLocation();
   const primaryVideo = project.videos?.[0];
   const isVideoProject = project.group === "commercial-video" && primaryVideo;
@@ -49,7 +51,26 @@ export default function ProjectCard({ project, copy, priority = false }) {
     video.load();
   };
 
-  const closePreview = () => setPreviewOpen(false);
+  const closePreview = () => {
+    const video = previewVideoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    setPreviewOpen(false);
+  };
+
+  const openPreview = () => {
+    flushSync(() => setPreviewOpen(true));
+
+    const video = previewVideoRef.current;
+    if (video) {
+      video.muted = false;
+      video.defaultMuted = false;
+      video.volume = PREVIEW_VOLUME;
+      video.play().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     setHoverVideoReady(false);
@@ -92,7 +113,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
           onMouseLeave={stopHoverPreview}
           onFocus={playHoverPreview}
           onBlur={stopHoverPreview}
-          onClick={() => setPreviewOpen(true)}
+          onClick={openPreview}
         >
           <figure {...protectedMediaSurfaceProps}>
             {canHoverPreview ? (
@@ -136,12 +157,27 @@ export default function ProjectCard({ project, copy, priority = false }) {
           </div>
         </button>
 
-        {previewOpen &&
-          createPortal(
-            <div className="video-preview-lightbox" role="dialog" aria-modal="true" aria-label={project.title} {...protectedMediaSurfaceProps}>
+        {createPortal(
+            <div
+              className={["video-preview-lightbox", previewOpen ? "is-open" : "is-closed"].join(" ")}
+              role="dialog"
+              aria-modal="true"
+              aria-hidden={!previewOpen}
+              aria-label={project.title}
+              inert={previewOpen ? undefined : ""}
+              {...protectedMediaSurfaceProps}
+            >
               <button className="video-preview-backdrop" type="button" aria-label="关闭" onClick={closePreview} />
               <div className="video-preview-frame" {...protectedMediaSurfaceProps}>
-                <ProtectedVideoPlayer src={primaryVideo} poster={project.cover} autoPlay muted preload="auto" className="video-preview-player" />
+                <ProtectedVideoPlayer
+                  ref={previewVideoRef}
+                  src={primaryVideo}
+                  poster={project.cover}
+                  autoPlay={previewOpen}
+                  preload="metadata"
+                  volume={PREVIEW_VOLUME}
+                  className="video-preview-player"
+                />
               </div>
               <button className="video-preview-close" type="button" aria-label="关闭" onClick={closePreview}>
                 ×

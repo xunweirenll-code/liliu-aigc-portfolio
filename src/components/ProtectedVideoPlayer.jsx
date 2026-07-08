@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import useProtectedVideoSource from "../hooks/useProtectedVideoSource.js";
 import { protectedMediaSurfaceProps, protectedVideoProps } from "../utils/mediaProtection.js";
 
@@ -24,6 +24,7 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
     poster,
     preload = "metadata",
     src,
+    volume = 1,
   },
   ref,
 ) {
@@ -38,32 +39,35 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
 
   useImperativeHandle(ref, () => videoRef.current);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const video = videoRef.current;
     if (!video || !protectedSrc) return undefined;
 
     video.muted = muted;
+    video.defaultMuted = muted;
+    video.volume = Math.min(1, Math.max(0, volume));
     setIsMuted(muted);
     video.load();
 
-    return undefined;
-  }, [muted, protectedSrc]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !protectedSrc || !autoPlay) return undefined;
-
     const playVideo = () => {
+      video.muted = muted;
+      video.defaultMuted = muted;
+      video.volume = Math.min(1, Math.max(0, volume));
+      setIsMuted(muted);
       video.play().catch(() => {});
     };
 
     if (autoPlay) {
       playVideo();
+      video.addEventListener("loadedmetadata", playVideo, { once: true });
       video.addEventListener("canplay", playVideo, { once: true });
     }
 
-    return () => video.removeEventListener("canplay", playVideo);
-  }, [autoPlay, protectedSrc]);
+    return () => {
+      video.removeEventListener("loadedmetadata", playVideo);
+      video.removeEventListener("canplay", playVideo);
+    };
+  }, [autoPlay, muted, protectedSrc, volume]);
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -87,6 +91,10 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
     if (!video) return;
 
     if (video.paused) {
+      video.muted = false;
+      video.defaultMuted = false;
+      video.volume = Math.min(1, Math.max(0, volume));
+      setIsMuted(false);
       video.play().catch(() => {});
       return;
     }
@@ -107,7 +115,12 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = !video.muted;
+    const nextMuted = !video.muted;
+    video.muted = nextMuted;
+    video.defaultMuted = nextMuted;
+    if (!nextMuted) {
+      video.volume = Math.min(1, Math.max(0, volume));
+    }
     setIsMuted(video.muted);
   };
 
@@ -170,8 +183,8 @@ const ProtectedVideoPlayer = forwardRef(function ProtectedVideoPlayer(
           aria-label="播放进度"
           onChange={seek}
         />
-        <button className="protected-video-button" type="button" aria-label={isMuted ? "取消静音" : "静音"} onClick={toggleMute}>
-          {isMuted ? "静音" : "声音"}
+        <button className="protected-video-button" type="button" aria-label={isMuted ? "开启声音" : "关闭声音"} onClick={toggleMute}>
+          {isMuted ? "静音" : "有声"}
         </button>
         <button className="protected-video-button protected-video-fullscreen-button" type="button" aria-label={isFullscreen ? "退出全屏" : "全屏"} onClick={toggleFullscreen}>
           全屏

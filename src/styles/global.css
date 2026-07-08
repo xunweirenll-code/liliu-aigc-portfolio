@@ -1778,6 +1778,17 @@ p {
   padding: 32px 92px;
 }
 
+.video-preview-lightbox.is-closed {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video-preview-lightbox.is-open {
+  visibility: visible;
+  opacity: 1;
+}
+
 .video-preview-backdrop {
   position: absolute;
   inset: 0;
