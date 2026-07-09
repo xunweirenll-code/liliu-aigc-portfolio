@@ -1185,6 +1185,22 @@ p {
   gap: 22px;
 }
 
+.indoor-furniture-grid {
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.image-grid.indoor-furniture-grid .image-tile {
+  aspect-ratio: auto;
+  border-radius: 8px;
+}
+
+.image-grid.indoor-furniture-grid .image-tile img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 .product-visual-section-stack {
   display: grid;
   gap: 42px;

@@ -273,7 +273,16 @@ const eventVisualSections = [
 ];
 const productMainImages = imageRange("product/主副图", "ai-product", 15).slice(8);
 const productAPlusImages = imageRange("product/A+图", "ai-product", 8);
-const productImages = [...productMainImages, ...productAPlusImages];
+const productAPlusImagesOrdered = [
+  ...productAPlusImages.slice(0, 4),
+  ...productAPlusImages.slice(5),
+  productAPlusImages[4],
+];
+const productImages = [...productMainImages, ...productAPlusImagesOrdered];
+const indoorFurnitureImages = Array.from(
+  { length: 3 },
+  (_, index) => `/assets/images/Indoor furniture/Indoor furniture (${index + 1}).png`,
+);
 const productSections = [
   {
     id: "main",
@@ -283,7 +292,7 @@ const productSections = [
   {
     id: "aplus",
     title: "A+图",
-    images: productAPlusImages,
+    images: productAPlusImagesOrdered,
   },
 ];
 const fashionVideos = [
@@ -337,6 +346,12 @@ export const projectGroups = [
         title: "AI产品图",
         description: "电商主图、A+ 内容与产品广告图像。",
         projectSlugs: ["ai-product-visual"],
+      },
+      {
+        id: "interior",
+        title: "AI室内家居",
+        description: "面向室内空间、家居陈列与生活方式场景的 AI 视觉。",
+        projectSlugs: ["ai-interior-space"],
       },
     ],
   },
@@ -569,17 +584,21 @@ export const projects = [
     slug: "ai-interior-space",
     group: "commercial-visual",
     category: "interior",
-    title: "AI家居与空间",
-    subtitle: "基于空间审美和商业表达的场景视觉方向。",
-    type: "AI家居与空间",
+    title: "AI室内家居",
+    subtitle: "基于空间审美、家居陈列和商业表达的室内场景视觉。",
+    type: "AI室内家居",
+    hideDetailIntroSections: true,
+    preserveImageRatio: true,
     tags: ["Interior", "Space", "Scene Generation"],
-    cover: "/assets/images/product/A+图/ai-product-01.webp",
-    images: imageRange("product/A+图", "ai-product", 8),
+    cover: "/assets/images/Indoor furniture/Indoor furniture (1).png",
+    images: indoorFurnitureImages,
+    hideVisualOutputTitle: true,
+    imageGridClassName: "indoor-furniture-grid",
     videos: [],
-    description: "当前暂无独立 interior 素材目录，先使用本地产品视觉作为占位，后续可直接替换为空间作品。",
-    role: "空间氛围设定 / 场景方向规划 / 图像筛选 / 商业表达梳理",
+    description: "围绕现代室内空间、家居陈列和自然光氛围，构建适合展示与提案的 AI 家居视觉。",
+    role: "空间氛围设定 / 家居场景规划 / 图像筛选 / 商业表达梳理",
     process: baseProcess,
-    result: "保留家居与空间视觉项目结构，等待后续补充真实空间素材。",
+    result: "形成可用于家居品牌展示、空间方案提案和生活方式内容的室内视觉素材。",
   },
   {
     slug: "ai-event-visual",

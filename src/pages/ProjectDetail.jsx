@@ -256,11 +256,11 @@ export default function ProjectDetail({ copy, language }) {
         </section>
       ) : gallery.length > 0 ? (
         <section className="detail-section">
-          <SectionTitle title={project.visualOutputTitle || copy.common.visualOutput} />
+          {project.hideVisualOutputTitle ? null : <SectionTitle title={project.visualOutputTitle || copy.common.visualOutput} />}
           <ImageGrid
             images={gallery}
             compact={!project.isLookbook && !project.preserveImageRatio}
-            className={project.preserveImageRatio ? "natural clothing-visual-grid" : ""}
+            className={project.imageGridClassName || (project.preserveImageRatio ? "natural clothing-visual-grid" : "")}
           />
         </section>
       ) : (
