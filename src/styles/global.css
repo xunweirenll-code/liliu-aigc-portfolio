@@ -1125,6 +1125,24 @@ p {
   gap: 10px;
 }
 
+.image-grid-item {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.image-grid-item .image-tile {
+  width: 100%;
+}
+
+.image-grid-item figcaption {
+  color: #333333;
+  font-size: 18px;
+  font-weight: var(--weight-medium);
+  line-height: 1.25;
+  text-align: center;
+}
+
 .image-grid.compact {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1199,6 +1217,25 @@ p {
   width: 100%;
   height: auto;
   object-fit: contain;
+}
+
+.image-grid.natural.figurine-design-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px 16px;
+}
+
+.image-grid.natural.figurine-design-grid .image-grid-item {
+  gap: 10px;
+}
+
+.image-grid.natural.figurine-design-grid .image-tile {
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+}
+
+.image-grid.natural.figurine-design-grid .image-tile img {
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-visual-section-stack {
@@ -3186,6 +3223,21 @@ p {
     break-inside: avoid;
   }
 
+  .image-grid.natural .image-grid-item {
+    display: inline-grid;
+    width: 100%;
+    margin: 0 0 18px;
+    break-inside: avoid;
+  }
+
+  .image-grid.natural .image-grid-item .image-tile {
+    margin: 0;
+  }
+
+  .image-grid-item figcaption {
+    font-size: 16px;
+  }
+
   .image-grid.product-visual-aplus-grid,
   .product-visual-main-grid,
   .clothing-visual-grid,
@@ -3225,6 +3277,13 @@ p {
     column-count: auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .image-grid.natural.figurine-design-grid {
+    display: grid;
+    column-count: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
   }
 
   .image-grid.natural.event-visual-merch-grid .image-tile {

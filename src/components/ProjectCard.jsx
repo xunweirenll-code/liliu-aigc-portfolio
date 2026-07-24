@@ -18,6 +18,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
   const location = useLocation();
   const primaryVideo = project.videos?.[0];
   const isVideoProject = project.group === "commercial-video" && primaryVideo;
+  const displayTitle = project.cardTitle || project.title;
   const protectedPrimaryVideo = useProtectedVideoSource(isVideoProject && canHoverPreview ? primaryVideo : "");
   const returnTo = location.pathname === "/" ? "/#works" : `${location.pathname}${location.search}${location.hash}`;
 
@@ -137,7 +138,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
             ) : (
               <LoadingImage
                 src={project.cover}
-                alt={project.title}
+                alt={displayTitle}
                 loading={priority ? "eager" : "lazy"}
                 fetchPriority={priority ? "high" : "auto"}
                 style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
@@ -147,7 +148,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
           </figure>
           <div className="card-copy">
             <div className="card-title-row">
-              <h3>{project.title}</h3>
+              <h3>{displayTitle}</h3>
             </div>
             <div className="tag-row">
               {project.tags.slice(0, 2).map((tag) => (
@@ -163,7 +164,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
               role="dialog"
               aria-modal="true"
               aria-hidden={!previewOpen}
-              aria-label={project.title}
+              aria-label={displayTitle}
               inert={previewOpen ? undefined : ""}
               {...protectedMediaSurfaceProps}
             >
@@ -201,7 +202,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
         {project.cover ? (
           <LoadingImage
             src={project.cover}
-            alt={project.title}
+            alt={displayTitle}
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : "auto"}
             style={project.coverPosition ? { objectPosition: project.coverPosition } : undefined}
@@ -216,7 +217,7 @@ export default function ProjectCard({ project, copy, priority = false }) {
       </figure>
       <div className="card-copy">
         <div className="card-title-row">
-          <h3>{project.title}</h3>
+          <h3>{displayTitle}</h3>
         </div>
         <div className="tag-row">
           {project.tags.slice(0, 2).map((tag) => (

@@ -5,6 +5,7 @@ import { protectedImageProps, protectedMediaSurfaceProps } from "../utils/mediaP
 
 const imageSource = (image) => (typeof image === "string" ? image : image.src);
 const imageAlt = (image) => (typeof image === "string" ? "AI portfolio visual" : image.alt);
+const imageCaption = (image) => (typeof image === "string" ? "" : image.caption);
 
 export default function ImageGrid({ images, compact = false, className = "", hoverLabel }) {
   const [previewIndex, setPreviewIndex] = useState(null);
@@ -44,10 +45,11 @@ export default function ImageGrid({ images, compact = false, className = "", hov
       <div className={gridClassName}>
         {images.map((image, index) => {
           const src = imageSource(image);
-          return (
+          const caption = imageCaption(image);
+          const tile = (
             <button
               {...protectedMediaSurfaceProps}
-              className={["image-tile reveal", hoverLabel ? "has-hint" : ""].filter(Boolean).join(" ")}
+              className={["image-tile", caption ? "" : "reveal", hoverLabel ? "has-hint" : ""].filter(Boolean).join(" ")}
               key={`${src}-${index}`}
               type="button"
               onClick={() => setPreviewIndex(index)}
@@ -55,6 +57,15 @@ export default function ImageGrid({ images, compact = false, className = "", hov
               <LoadingImage src={src} alt={imageAlt(image)} loading={index < 2 ? "eager" : "lazy"} fetchPriority={index < 2 ? "high" : "auto"} />
               {hoverLabel && <span className="image-tile-hint">{hoverLabel}</span>}
             </button>
+          );
+
+          if (!caption) return tile;
+
+          return (
+            <figure className="image-grid-item has-caption reveal" key={`${src}-${index}`}>
+              {tile}
+              <figcaption>{caption}</figcaption>
+            </figure>
           );
         })}
       </div>

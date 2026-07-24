@@ -283,6 +283,12 @@ const indoorFurnitureImages = Array.from(
   { length: 3 },
   (_, index) => `/assets/images/Indoor furniture/Indoor furniture (${index + 1}).png`,
 );
+const figurineDesignNames = ["林黛玉", "薛宝钗", "史湘云", "王熙凤", "李纨", "秦可卿", "妙玉", "巧姐", "元春", "迎春", "探春", "惜春"];
+const figurineDesignImages = figurineDesignNames.map((name, index) => ({
+  src: `/assets/images/3D figurine design/3D figurine design (${index + 1}).png`,
+  alt: `${name}手办设计`,
+  caption: name,
+}));
 const productSections = [
   {
     id: "main",
@@ -352,6 +358,12 @@ export const projectGroups = [
         title: "AI室内家居",
         description: "面向室内空间、家居陈列与生活方式场景的 AI 视觉。",
         projectSlugs: ["ai-interior-space"],
+      },
+      {
+        id: "figurine-design",
+        title: "金陵十二钗手办设计",
+        description: "面向金陵十二钗角色手办、潮玩造型与商业展示的 AI 3D 视觉设计。",
+        projectSlugs: ["ai-3d-figurine-design"],
       },
     ],
   },
@@ -599,6 +611,29 @@ export const projects = [
     role: "空间氛围设定 / 家居场景规划 / 图像筛选 / 商业表达梳理",
     process: baseProcess,
     result: "形成可用于家居品牌展示、空间方案提案和生活方式内容的室内视觉素材。",
+  },
+  {
+    slug: "ai-3d-figurine-design",
+    group: "commercial-visual",
+    category: "figurine-design",
+    title: "金陵十二钗手办设计",
+    detailTitle: "AI 3D手办设计",
+    cardTitle: "AI 3D手办设计",
+    subtitle: "面向金陵十二钗角色手办、潮玩造型与商业展示的 AI 3D 视觉设计。",
+    type: "金陵十二钗手办设计",
+    hideDetailIntroSections: true,
+    preserveImageRatio: true,
+    tags: ["3D Figurine", "Character Design", "AI Commercial Visual"],
+    cover: "/assets/images/3D figurine design/3D figurine design (1).png",
+    coverPosition: "center 18%",
+    images: figurineDesignImages,
+    visualOutputTitle: "金陵十二钗手办设计",
+    imageGridClassName: "natural figurine-design-grid",
+    videos: [],
+    description: "围绕金陵十二钗角色造型、材质质感和展示场景，生成适合手办设计提案与商业视觉展示的 AI 3D 形象。",
+    role: "角色方向设定 / 造型风格生成 / 材质氛围控制 / 图像筛选整理",
+    process: baseProcess,
+    result: "形成 12 张可用于作品集展示和设计提案的金陵十二钗手办视觉素材。",
   },
   {
     slug: "ai-event-visual",
